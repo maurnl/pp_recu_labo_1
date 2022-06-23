@@ -22,7 +22,7 @@ int main(void) {
 	eCensista censistaList[CENSISTA_LEN];
 	eCatastro catastroList[CATASTRO_LEN];
 	Vivienda_initViviendas(viviendaList,VIVIENDA_LEN);
-	//Vivienda_hardcodearViviendas(viviendaList, VIVIENDA_LEN, &idVivienda,&viviendasActivas);
+	Vivienda_hardcodearViviendas(viviendaList, VIVIENDA_LEN, &idVivienda,&viviendasActivas);
 	Censista_hardcodearCensistas(censistaList, CENSISTA_LEN);
 	Catastro_hardcodearCatastros(catastroList, CATASTRO_LEN);
 	do{

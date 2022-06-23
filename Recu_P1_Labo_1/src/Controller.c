@@ -112,8 +112,10 @@ int Controller_editVivienda(eVivienda* viviendaList,int lenVivienda){
 						tipoViviendaBuff=Vivienda_TipoViviendaStrToInt(tipoDesc);
 						Vivienda_TipoViviendaIntToStr(tipoViviendaBuff,tipoDesc);
 						printf("- TIPO DE VIVIENDA NUEVO: %s.\n", tipoDesc);
-						if(confirm("- CONFIRME MODIFICACION DE TIPO DE VIVIENDA(S/N)"))
-							(*(viviendaList+indice)).tipoVivienda=tipoViviendaBuff;
+						if(confirm("- CONFIRME MODIFICACION DE TIPO DE VIVIENDA(S/N)")){
+							(*(viviendaList+indice)).tipoVivienda.id=tipoViviendaBuff;
+							strcpy((*(viviendaList+indice)).tipoVivienda.descripcion,tipoDesc);
+						}
 						break;
 				}
 				printf("ID      CALLE                   PERSONAS         HABITACIONES   TIPO VIVIENDA   LEGAJO CENSISTA   ID CATASTRO\n");

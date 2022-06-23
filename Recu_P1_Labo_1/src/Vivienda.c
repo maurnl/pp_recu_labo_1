@@ -74,6 +74,7 @@ int Vivienda_initViviendas(eVivienda* list, int len)	{
 int Vivienda_addVivienda(eVivienda* list,int len, int id, char* calle, int personas, int habitaciones, int tipo, int legajoCensista, int idCatastro){
 	int retorno=-1;
 	int emptyIndex;
+	char descripcionTipo[25];
 	emptyIndex = Vivienda_getEmptyIndex(list, len);
 	if(list!=NULL&&len>0&&id>-1&&calle!=NULL&&emptyIndex!=-1){
 		stringToUpper(calle, 1);
@@ -81,7 +82,9 @@ int Vivienda_addVivienda(eVivienda* list,int len, int id, char* calle, int perso
 		strcpy((*(list + emptyIndex)).calle,calle);
 		(*(list + emptyIndex)).cantidadPersonas =personas;
 		(*(list + emptyIndex)).cantidadHabitaciones=habitaciones;
-		(*(list + emptyIndex)).tipoVivienda=tipo;
+		Vivienda_TipoViviendaIntToStr(tipo, descripcionTipo);
+		(*(list + emptyIndex)).tipoVivienda.id=tipo;
+		strcpy((*(list + emptyIndex)).tipoVivienda.descripcion,descripcionTipo);
 		(*(list + emptyIndex)).legajoCensista=legajoCensista;
 		(*(list + emptyIndex)).idCatastro=idCatastro;
 		(*(list + emptyIndex)).isEmpty=0;
@@ -167,7 +170,7 @@ int Vivienda_sortViviendasByTipo(eVivienda* list, int len){
 		do {
 			flagSwapeo = 0;
 			for(int i=1; i<len; i++) {
-				if((*(list+i)).tipoVivienda<(*(list+i-1)).tipoVivienda) {
+				if((*(list+i)).tipoVivienda.id<(*(list+i-1)).tipoVivienda.id) {
 					aux = *(list+i);
 					*(list+i) = *(list+i-1);
 					*(list+i-1) = aux;
@@ -233,9 +236,7 @@ int Vivienda_TipoViviendaIntToStr(int id, char* tipo){
  * @param vivienda eVivienda
  */
 void Vivienda_printVivienda(eVivienda vivienda){
-	char tipo[25];
-	Vivienda_TipoViviendaIntToStr(vivienda.tipoVivienda, tipo);
-	printf("%-4d \t%-17s \t%-8d \t %-8d \t%-8s \t%-8d \t%-5d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas, vivienda.cantidadHabitaciones, tipo, vivienda.legajoCensista, vivienda.idCatastro);
+	printf("%-4d \t%-17s \t%-8d \t %-8d \t%-8s \t%-8d \t%-5d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas, vivienda.cantidadHabitaciones, vivienda.tipoVivienda.descripcion, vivienda.legajoCensista, vivienda.idCatastro);
 }
 
 /**
@@ -308,7 +309,7 @@ void Vivienda_modificarVivienda(eVivienda vivienda){
 
 int Vivienda_filtrarPorTipo(eVivienda vivienda,int tipo){
 	int retorno=0;
-	if(vivienda.tipoVivienda==tipo)
+	if(vivienda.tipoVivienda.id==tipo)
 		retorno=1;
 	return retorno;
 }

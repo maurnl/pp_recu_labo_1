@@ -9,11 +9,16 @@
 #define VIVIENDA_H_
 
 typedef struct {
+	int id;
+	char descripcion[25];
+}TipoVivienda;
+
+typedef struct {
 	int idVivienda;
 	char calle[25];
 	int cantidadPersonas;
 	int cantidadHabitaciones;
-	int tipoVivienda;
+	TipoVivienda tipoVivienda;
 	int legajoCensista; //FK Censista
 	int idCatastro; //FK Catastro
 	int isEmpty;

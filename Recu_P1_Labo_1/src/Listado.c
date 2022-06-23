@@ -20,9 +20,7 @@
  * @param catastro eCatastro entity
  */
 void Listado_listVivienda(eVivienda vivienda, eCensista censista, eCatastro catastro){
-	char tipoDesc[25];
-	Vivienda_TipoViviendaIntToStr(vivienda.tipoVivienda, tipoDesc);
-	printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t  %-3d\t\t\t%-10s%-2d\t%-10s\t%-4d\t\t%-16s%-2d\t%-4d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,tipoDesc,vivienda.legajoCensista,censista.nombre,
+	printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t  %-3d\t\t\t%-10s%-2d\t%-10s\t%-4d\t\t%-16s%-2d\t%-4d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,vivienda.tipoVivienda.descripcion,vivienda.legajoCensista,censista.nombre,
 			censista.edad,censista.telefono,vivienda.idCatastro,catastro.localidad,catastro.manzana,catastro.parcela);
 }
 
@@ -74,7 +72,7 @@ int Listado_listViviendasPorTipo(eVivienda* viviendaList,eCensista* censistaList
 		printf("ID      CALLE           PERSONAS  HABITACIONES  TIPO DE VIVIENDA  LEGAJO CENSISTA       NOMBRE    EDAD  TELEFONO        ID CATASTRO     LOCALIDAD       MANZANA PARCELA\n");
 		printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 		for(int i=0;i<lenVivienda;i++){
-			if((*(viviendaList+i)).isEmpty==0&&(*(viviendaList+i)).tipoVivienda==tipoVivienda){
+			if((*(viviendaList+i)).isEmpty==0&&(*(viviendaList+i)).tipoVivienda.id==tipoVivienda){
 				indiceCensista=Censista_getIndexById(censistaList,lenCensista,(*(viviendaList+i)).legajoCensista);
 				indiceCatastro=Catastro_getIndexById(catastroList,lenCatastro,(*(viviendaList+i)).idCatastro);
 				Listado_listVivienda(*(viviendaList+i),*(censistaList+indiceCensista),*(catastroList+indiceCatastro));
@@ -96,7 +94,7 @@ int Listado_contarViviendasPorTipo(eVivienda* viviendaList,int lenVivienda,int t
 	if(viviendaList!=NULL&&lenVivienda>0){
 		retorno=0;
 		for(int i=0;i<lenVivienda;i++){
-			if(!(*(viviendaList+i)).isEmpty&&(*(viviendaList+i)).tipoVivienda==tipoVivienda){
+			if(!(*(viviendaList+i)).isEmpty&&(*(viviendaList+i)).tipoVivienda.id==tipoVivienda){
 				retorno++;
 			}
 		}
@@ -115,7 +113,6 @@ int Listado_contarViviendasPorTipo(eVivienda* viviendaList,int lenVivienda,int t
 int Listado_listViviendasPorLocalidad(eVivienda* viviendaList,eCensista* censistaList,int lenVivienda,int lenCensista,int idCatastro){
 	int retorno=-1;
 	int indiceCensista;
-	char tipoDesc[25];
 	eVivienda vivienda;
 	eCensista censista;
 	if(viviendaList!=NULL&&censistaList!=NULL&&lenVivienda>0&&lenCensista>0){
@@ -127,8 +124,7 @@ int Listado_listViviendasPorLocalidad(eVivienda* viviendaList,eCensista* censist
 			indiceCensista=Censista_getIndexById(censistaList,lenCensista,vivienda.legajoCensista);
 			censista=*(censistaList+indiceCensista);
 			if(vivienda.isEmpty==0&&vivienda.idCatastro==idCatastro){
-				Vivienda_TipoViviendaIntToStr(vivienda.tipoVivienda, tipoDesc);
-				printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t\t%-10s\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,tipoDesc,censista.nombre);
+				printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t\t%-10s\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,vivienda.tipoVivienda.descripcion,censista.nombre);
 			}
 		}
 		printf("----------------------------------------------------------------------------------------------\n");
@@ -167,7 +163,7 @@ int Listado_contarViviendasPorLocalidadYTipo(eVivienda* viviendaList,int lenVivi
 	if(viviendaList!=NULL&&lenVivienda>0){
 		retorno=0;
 		for(int i=0;i<lenVivienda;i++){
-			if(!(*(viviendaList+i)).isEmpty&&(*(viviendaList+i)).idCatastro==idCatastro&&(*(viviendaList+i)).tipoVivienda==tipoVivienda){
+			if(!(*(viviendaList+i)).isEmpty&&(*(viviendaList+i)).idCatastro==idCatastro&&(*(viviendaList+i)).tipoVivienda.id==tipoVivienda){
 				retorno++;
 			}
 		}
@@ -187,7 +183,6 @@ int Listado_contarViviendasPorLocalidadYTipo(eVivienda* viviendaList,int lenVivi
 int Listado_listViviendasPorCensista(eVivienda* viviendaList, eCatastro* catastroList,int lenVivienda, int lenCatastro,int legajoCensista){
 	int retorno=-1;
 	int indiceCatastro;
-	char tipoDesc[25];
 	eVivienda vivienda;
 	eCatastro catastro;
 	if(viviendaList!=NULL&&catastroList!=NULL&&lenVivienda>0&&lenCatastro>0){
@@ -199,8 +194,7 @@ int Listado_listViviendasPorCensista(eVivienda* viviendaList, eCatastro* catastr
 			indiceCatastro=Catastro_getIndexById(catastroList,lenCatastro,vivienda.idCatastro);
 			catastro=*(catastroList+indiceCatastro);
 			if(vivienda.isEmpty==0&&vivienda.legajoCensista==legajoCensista){
-				Vivienda_TipoViviendaIntToStr(vivienda.tipoVivienda, tipoDesc);
-				printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t\t%-4d\t\t%-16s%-2d\t%-4d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,tipoDesc,vivienda.idCatastro,catastro.localidad,catastro.manzana,catastro.parcela);
+				printf("%-5d\t%-15s\t%-3d\t  %-3d\t\t%-13s\t\t%-4d\t\t%-16s%-2d\t%-4d\n",vivienda.idVivienda, vivienda.calle, vivienda.cantidadPersonas,vivienda.cantidadHabitaciones,vivienda.tipoVivienda.descripcion,vivienda.idCatastro,catastro.localidad,catastro.manzana,catastro.parcela);
 			}
 		}
 		printf("------------------------------------------------------------------------------------------------------------------\n");
